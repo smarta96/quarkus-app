@@ -2,11 +2,12 @@ apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   annotations:
+    chains.tekton.dev/signed: 'true'
     pipeline.openshift.io/started-by: 'kube:admin'
-  resourceVersion: '467480'
-  name: quarkus-pipeline-zxjp1o
-  uid: 6a191780-c9bc-4943-893d-9e7533b47c2b
-  creationTimestamp: '2024-08-27T08:40:22Z'
+  resourceVersion: '473846'
+  name: quarkus-pipeline-1u89xt
+  uid: d4102fde-82bf-4391-96a9-9a7d42f15ad5
+  creationTimestamp: '2024-08-27T08:49:57Z'
   generation: 1
   managedFields:
     - apiVersion: tekton.dev/v1
@@ -29,23 +30,26 @@ metadata:
           'f:workspaces': {}
       manager: Mozilla
       operation: Update
-      time: '2024-08-27T08:40:22Z'
+      time: '2024-08-27T08:49:57Z'
     - apiVersion: tekton.dev/v1
       fieldsType: FieldsV1
       fieldsV1:
         'f:metadata':
+          'f:annotations':
+            'f:chains.tekton.dev/signed': {}
           'f:finalizers':
             .: {}
             'v:"chains.tekton.dev/pipelinerun"': {}
       manager: openshift-pipelines-chains-controller
       operation: Update
-      time: '2024-08-27T08:40:22Z'
+      time: '2024-08-27T08:50:11Z'
     - apiVersion: tekton.dev/v1
       fieldsType: FieldsV1
       fieldsV1:
         'f:status':
           .: {}
           'f:childReferences': {}
+          'f:completionTime': {}
           'f:conditions': {}
           'f:pipelineSpec':
             .: {}
@@ -77,11 +81,12 @@ metadata:
               'f:RequireGitSSHSecretKnownHosts': {}
               'f:EnforceNonfalsifiability': {}
               'f:SendCloudEventsForRuns': {}
+          'f:skippedTasks': {}
           'f:startTime': {}
       manager: openshift-pipelines-controller
       operation: Update
       subresource: status
-      time: '2024-08-27T08:40:22Z'
+      time: '2024-08-27T08:50:11Z'
   namespace: default
   finalizers:
     - chains.tekton.dev/pipelinerun
@@ -101,13 +106,18 @@ status:
   childReferences:
     - apiVersion: tekton.dev/v1
       kind: TaskRun
-      name: quarkus-pipeline-zxjp1o-git-clone
+      name: quarkus-pipeline-1u89xt-git-clone
       pipelineTaskName: git-clone
+    - apiVersion: tekton.dev/v1
+      kind: TaskRun
+      name: quarkus-pipeline-1u89xt-maven
+      pipelineTaskName: maven
+  completionTime: '2024-08-27T08:50:11Z'
   conditions:
-    - lastTransitionTime: '2024-08-27T08:40:22Z'
-      message: 'Tasks Completed: 0 (Failed: 0, Cancelled 0), Incomplete: 3, Skipped: 0'
-      reason: Running
-      status: Unknown
+    - lastTransitionTime: '2024-08-27T08:50:11Z'
+      message: 'Tasks Completed: 2 (Failed: 1, Cancelled 0), Skipped: 1'
+      reason: Failed
+      status: 'False'
       type: Succeeded
   pipelineSpec:
     tasks:
@@ -152,13 +162,14 @@ status:
           - name: output
             workspace: shared
         status:
+          completionTime: '2024-08-27T08:50:02Z'
           conditions:
-            - lastTransitionTime: '2024-08-27T08:40:47Z'
-              message: Not all Steps in the Task have finished executing
-              reason: Running
-              status: Unknown
+            - lastTransitionTime: '2024-08-27T08:50:02Z'
+              message: All Steps have completed executing
+              reason: Succeeded
+              status: 'True'
               type: Succeeded
-          podName: quarkus-pipeline-zxjp1o-git-clone-pod
+          podName: quarkus-pipeline-1u89xt-git-clone-pod
           provenance:
             featureFlags:
               MaxResultSize: 4096
@@ -183,7 +194,29 @@ status:
               DisableInlineSpec: ''
               EnableArtifacts: false
               EnableCELInWhenExpression: false
-          startTime: '2024-08-27T08:40:22Z'
+          results:
+            - name: commit
+              type: string
+              value: f3f775f45414c33b9d6ef773d6ea4a6dd2f14554
+            - name: committer-date
+              type: string
+              value: '1724748207'
+            - name: url
+              type: string
+              value: 'https://github.com/smarta96/quarkus-app.git'
+          startTime: '2024-08-27T08:49:57Z'
+          steps:
+            - container: step-clone
+              imageID: 'registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:539b019e2ff60c023c1b2d0c43f02859ef1e8c3718048be71c07e02af407c46a'
+              name: clone
+              terminated:
+                containerID: 'cri-o://904c436879e47db21425d54517e1c86bec3f4f22397fae22b0abd3f9862879b4'
+                exitCode: 0
+                finishedAt: '2024-08-27T08:50:01Z'
+                message: '[{"key":"commit","value":"f3f775f45414c33b9d6ef773d6ea4a6dd2f14554","type":1},{"key":"committer-date","value":"1724748207","type":1},{"key":"url","value":"https://github.com/smarta96/quarkus-app.git","type":1}]'
+                reason: Completed
+                startedAt: '2024-08-27T08:50:01Z'
+              terminationReason: Completed
           taskSpec:
             description: |-
               These Tasks are Git tasks to work with repositories used by other tasks in your Pipeline.
@@ -402,15 +435,8 @@ status:
                   verify the peer with when fetching or pushing over HTTPS.
                 name: ssl-ca-directory
                 optional: true
-          reason: Running
-          steps:
-            - container: step-clone
-              name: clone
-              waiting:
-                reason: PodInitializing
-              imageID: 'registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:539b019e2ff60c023c1b2d0c43f02859ef1e8c3718048be71c07e02af407c46a'
-              running:
-                startedAt: '2024-08-27T08:40:45Z'
+          duration: 5s
+          reason: Succeeded
       - name: maven
         params:
           - name: MAVEN_IMAGE
@@ -437,7 +463,7 @@ status:
           - name: PROXY_PROTOCOL
             value: http
           - name: CONTEXT_DIR
-            value: .
+            value: /workspace/output
         runAfter:
           - git-clone
         taskRef:
@@ -449,7 +475,209 @@ status:
           - name: maven-settings
             workspace: shared
         status:
-          reason: Pending
+          completionTime: '2024-08-27T08:50:11Z'
+          conditions:
+            - lastTransitionTime: '2024-08-27T08:50:11Z'
+              message: '"step-mvn-goals" exited with code 1'
+              reason: Failed
+              status: 'False'
+              type: Succeeded
+          podName: quarkus-pipeline-1u89xt-maven-pod
+          provenance:
+            featureFlags:
+              MaxResultSize: 4096
+              AwaitSidecarReadiness: true
+              Coschedule: workspaces
+              ResultExtractionMethod: termination-message
+              EnableParamEnum: false
+              SendCloudEventsForRuns: false
+              EnforceNonfalsifiability: none
+              ScopeWhenExpressionsToTask: false
+              SetSecurityContext: false
+              DisableCredsInit: false
+              DisableAffinityAssistant: true
+              EnableStepActions: false
+              EnableAPIFields: beta
+              RequireGitSSHSecretKnownHosts: false
+              RunningInEnvWithInjectedSidecars: true
+              EnableKeepPodOnCancel: false
+              EnableTektonOCIBundles: false
+              VerificationNoMatchPolicy: ignore
+              EnableProvenanceInStatus: true
+              DisableInlineSpec: ''
+              EnableArtifacts: false
+              EnableCELInWhenExpression: false
+          startTime: '2024-08-27T08:50:02Z'
+          steps:
+            - container: step-mvn-settings
+              imageID: 'registry.redhat.io/ubi8/ubi-minimal@sha256:f09190148fb3b34decef980fcaa88e5ca77c8fc8af7f0eb6cc10fb1a840372fa'
+              name: mvn-settings
+              terminated:
+                containerID: 'cri-o://7e421e69fd4691482aa37015336eb73fe3bccc5edd43fdc9063186aa63067350'
+                exitCode: 0
+                finishedAt: '2024-08-27T08:50:08Z'
+                reason: Completed
+                startedAt: '2024-08-27T08:50:08Z'
+              terminationReason: Completed
+            - container: step-mvn-goals
+              imageID: 'registry.redhat.io/ubi8/openjdk-17@sha256:841b6e905397b41b0def990b26d5787237e67b35278ad07b4e574a5f78d24763'
+              name: mvn-goals
+              terminated:
+                containerID: 'cri-o://760e836000b70e0176c660b8b296111260a5d163ee54d2c3b0ecf74e9b5d09fe'
+                exitCode: 1
+                finishedAt: '2024-08-27T08:50:10Z'
+                reason: Error
+                startedAt: '2024-08-27T08:50:08Z'
+              terminationReason: Error
+          taskSpec:
+            description: This Task can be used to run a Maven build.
+            params:
+              - default: 'registry.redhat.io/ubi8/openjdk-17@sha256:e8cc2e476282b75d89c73057bfa713db22d72bdb2808d62d981a84c33beb2575'
+                description: Maven base image
+                name: MAVEN_IMAGE
+                type: string
+              - default:
+                  - package
+                description: maven goals to run
+                name: GOALS
+                type: array
+              - default: ''
+                description: The Maven repository mirror url
+                name: MAVEN_MIRROR_URL
+                type: string
+              - default: ''
+                description: The username for the server
+                name: SERVER_USER
+                type: string
+              - default: ''
+                description: The password for the server
+                name: SERVER_PASSWORD
+                type: string
+              - default: ''
+                description: The username for the proxy server
+                name: PROXY_USER
+                type: string
+              - default: ''
+                description: The password for the proxy server
+                name: PROXY_PASSWORD
+                type: string
+              - default: ''
+                description: Port number for the proxy server
+                name: PROXY_PORT
+                type: string
+              - default: ''
+                description: Proxy server Host
+                name: PROXY_HOST
+                type: string
+              - default: ''
+                description: Non proxy server host
+                name: PROXY_NON_PROXY_HOSTS
+                type: string
+              - default: http
+                description: Protocol for the proxy ie http or https
+                name: PROXY_PROTOCOL
+                type: string
+              - default: .
+                description: The context directory within the repository for sources on which we want to execute maven goals.
+                name: CONTEXT_DIR
+                type: string
+            steps:
+              - computeResources: {}
+                env:
+                  - name: HOME
+                    value: /tekton/home
+                image: 'registry.redhat.io/ubi8/ubi-minimal@sha256:f729a7f5685ea823e87ffd68aff988f2b8ff8d52126ade4e6de7c68088f28ebd'
+                name: mvn-settings
+                script: |
+                  #!/usr/bin/env bash
+
+                  [[ -f /workspace/maven-settings/settings.xml ]] && \
+                  echo 'using existing /workspace/maven-settings/settings.xml' && exit 0
+
+                  cat > /workspace/maven-settings/settings.xml <<EOF
+                  <settings>
+                    <servers>
+                      <!-- The servers added here are generated from environment variables. Don't change. -->
+                      <!-- ### SERVER's USER INFO from ENV ### -->
+                    </servers>
+                    <mirrors>
+                      <!-- The mirrors added here are generated from environment variables. Don't change. -->
+                      <!-- ### mirrors from ENV ### -->
+                    </mirrors>
+                    <proxies>
+                      <!-- The proxies added here are generated from environment variables. Don't change. -->
+                      <!-- ### HTTP proxy from ENV ### -->
+                    </proxies>
+                  </settings>
+                  EOF
+
+                  xml=""
+                  if [ -n "" -a -n "" ]; then
+                    xml="<proxy>\
+                      <id>genproxy</id>\
+                      <active>true</active>\
+                      <protocol>http</protocol>\
+                      <host></host>\
+                      <port></port>"
+                    if [ -n "" -a -n "" ]; then
+                      xml="$xml\
+                          <username></username>\
+                          <password></password>"
+                    fi
+                    if [ -n "" ]; then
+                      xml="$xml\
+                          <nonProxyHosts></nonProxyHosts>"
+                    fi
+                    xml="$xml\
+                        </proxy>"
+                    sed -i "s|<!-- ### HTTP proxy from ENV ### -->|$xml|" /workspace/maven-settings/settings.xml
+                  fi
+
+                  if [ -n "" -a -n "" ]; then
+                    xml="<server>\
+                      <id>serverid</id>"
+                    xml="$xml\
+                          <username></username>\
+                          <password></password>"
+                    xml="$xml\
+                        </server>"
+                    sed -i "s|<!-- ### SERVER's USER INFO from ENV ### -->|$xml|" /workspace/maven-settings/settings.xml
+                  fi
+
+                  if [ -n "" ]; then
+                    xml="    <mirror>\
+                      <id>mirror.default</id>\
+                      <url></url>\
+                      <mirrorOf>central</mirrorOf>\
+                    </mirror>"
+                    sed -i "s|<!-- ### mirrors from ENV ### -->|$xml|" /workspace/maven-settings/settings.xml
+                  fi
+                securityContext:
+                  runAsNonRoot: true
+                  runAsUser: 65532
+              - args:
+                  - '-s'
+                  - /workspace/maven-settings/settings.xml
+                  - package
+                command:
+                  - /usr/bin/mvn
+                computeResources: {}
+                env:
+                  - name: HOME
+                    value: /tekton/home
+                image: 'registry.redhat.io/ubi8/openjdk-17@sha256:e8cc2e476282b75d89c73057bfa713db22d72bdb2808d62d981a84c33beb2575'
+                name: mvn-goals
+                securityContext:
+                  runAsNonRoot: true
+                  runAsUser: 65532
+                workingDir: /workspace/source//workspace/output
+            workspaces:
+              - description: The workspace consisting of maven project.
+                name: source
+              - description: The workspace consisting of the custom maven settings provided by the user.
+                name: maven-settings
+          duration: 9s
+          reason: Failed
       - name: buildah
         params:
           - name: IMAGE
@@ -481,7 +709,7 @@ status:
           - name: source
             workspace: shared
         status:
-          reason: Pending
+          reason: Skipped
     workspaces:
       - name: shared
   provenance:
@@ -508,4 +736,7 @@ status:
       DisableInlineSpec: ''
       EnableArtifacts: false
       EnableCELInWhenExpression: false
-  startTime: '2024-08-27T08:40:22Z'
+  skippedTasks:
+    - name: buildah
+      reason: PipelineRun was stopping
+  startTime: '2024-08-27T08:49:57Z'
